@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>嚕嚕米的每日邀約 🌱</title>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", sans-serif; }
+    body {
+      background-color: #F4F7F4;
+      background-image: radial-gradient(#E2EBE2 1.5px, transparent 1.5px);
+      background-size: 20px 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+    .moomin-card {
+      background: #FFFFFF;
+      border: 3px solid #6E8B7E;
+      border-radius: 28px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 330px;
+      text-align: center;
+      box-shadow: 0 12px 24px rgba(110, 139, 126, 0.15);
+    }
+    .badge {
+      display: inline-block;
+      background: #E8F0EC;
+      color: #557164;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .illustration {
+      font-size: 54px;
+      margin-bottom: 12px;
+      animation: float 2.5s ease-in-out infinite;
+    }
+    h2 {
+      font-size: 21px;
+      color: #384A42;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .btn {
+      border: none;
+      padding: 14px 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .btn:active { transform: scale(0.95); }
+    .btn-yes {
+      background-color: #6E8B7E;
+      color: #FFFFFF;
+      box-shadow: 0 6px 14px rgba(110, 139, 126, 0.35);
+    }
+    .btn-no {
+      background-color: #EFEFEF;
+      color: #7A8682;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(45, 59, 53, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .popup-overlay.show { opacity: 1; pointer-events: auto; }
+    .popup-box {
+      background: #FFFFFF;
+      border-radius: 24px;
+      border: 3px solid #E4A99B;
+      padding: 24px;
+      width: 80%;
+      max-width: 280px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .popup-btn {
+      margin-top: 16px;
+      background: #E4A99B;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hidden { display: none !important; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="moomin-card">
+    <div id="step1">
+      <div class="badge">MOOMIN VALLEY</div>
+      <div class="illustration">🌿</div>
+      <h2>妳今天想一起運動嗎？</h2>
+      <div class="btn-group">
+        <button class="btn btn-yes" onclick="chooseYes()">想 🌸</button>
+        <button class="btn btn-no" onclick="chooseNo()">不想 🌧️</button>
+      </div>
+    </div>
+
+    <div id="step2" class="hidden">
+      <div class="illustration">🎉</div>
+      <h2 style="color: #6E8B7E; margin-bottom: 12px;">太棒了！</h2>
+      <p style="font-size: 15px; color: #557164; line-height: 1.6;">
+        恭喜你離健康與快樂更進一步！ 🌱✨
+      </p>
+      <p style="font-size: 12px; color: #9AB0A6; margin-top: 16px;">
+        （已自動為您在 LINE 回覆「好」...）
+      </p>
+    </div>
+  </div>
+
+  <div id="noPopup" class="popup-overlay">
+    <div class="popup-box">
+      <div style="font-size: 38px; margin-bottom: 8px;">🍄</div>
+      <h3 style="color: #4A5852; font-size: 18px; margin-bottom: 6px;">姆明谷廣播</h3>
+      <p style="color: #7D8E86; font-size: 14px;">沒有這個選項！請重新選擇～</p>
+      <button class="popup-btn" onclick="closePopup()">好的，我重選</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof liff !== "undefined") {
+        liff.init({ liffId: window.location.search.split('liffId=')[1] || "" }).catch(() => {});
+      }
+    });
+
+    function chooseNo() {
+      document.getElementById('noPopup').classList.add('show');
+    }
+    function closePopup() {
+      document.getElementById('noPopup').classList.remove('show');
+    }
+    function chooseYes() {
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+
+      if (typeof liff !== "undefined" && liff.isInClient()) {
+        liff.sendMessages([{ type: 'text', text: '好' }])
+          .then(() => { setTimeout(() => { liff.closeWindow(); }, 2200); })
+          .catch((err) => { console.error(err); });
+      }
+    }
+  </script>
+</body>
+</html>
